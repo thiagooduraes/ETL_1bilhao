@@ -46,6 +46,5 @@ if __name__ == "__main__":
     df = create_df_with_pandas(filename, total_linhas, chunksize)
     took = time.time() - start_time
 
-    with open("output_pandas.txt", "a") as saida:
-        print(df.head(), file=saida)
+    print(df.head())
     print(f"Processamento levou {took:.2f} segundos.")
