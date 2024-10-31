@@ -2,7 +2,7 @@ import duckdb
 import time
 
 def create_duckdb():
-    duckdb.sql("""
+    result = duckdb.sql("""
     SELECT
         cidade,
         min(temperatura) as temp_min,
@@ -11,18 +11,13 @@ def create_duckdb():
     FROM read_csv("data/measurements.txt", AUTO_DETECT=FALSE, sep=';', columns={'cidade':VARCHAR, 'temperatura':'DECIMAL(3,1)'})
     GROUP BY cidade
     ORDER BY cidade
-    """).show()
+    """)
 
-def show_moc():
-    duckdb.sql("""
-    SELECT
-        cidade,
-        temperatura
-    FROM read_csv("data/measurements.txt", AUTO_DETECT=FALSE, sep=';', columns={'cidade':VARCHAR, 'temperatura':'DECIMAL(3,1)'})
-    WHERE cidade LIKE 'Montes Claros'
-    GROUP BY cidade, temperatura
-    ORDER BY temperatura
-    """).show()
+    result.show()
+
+    #Salvando em arquivo parquet
+    result.write_parquet('data/measurements_summary.parquet')
+
 
 if __name__ == "__main__":
     import time
